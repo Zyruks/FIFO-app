@@ -20,6 +20,7 @@ dist-ssr
 out/
 build
 dist
+.firebase/
 
 # Debug
 npm-debug.log*
