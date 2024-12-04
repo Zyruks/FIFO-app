@@ -102,8 +102,8 @@ From the root of the project, you can run the following commands:
 The project is organized into the following directories:
 
 - **`src/common`**: Contains shared logic and utilities:
-  - **`context`**: Context providers for state management (`AuthContext`, `QueueContext`, `ThemeContext`).
-  - **`hooks`**: Custom React hooks for event handling, local storage, and more.
+  - **`context`**: Context providers for state management (`AuthContext`, `ThemeContext`).
+  - **`hooks`**: Custom React hooks for event handling, local storage, queue management, and more.
   - **`constants`**: Centralized constants such as themes, form states, and Firebase error codes.
   - **`utils`**: Utility functions (`cn`, `validatePattern`).
 - **`src/api`**: Contains Firebase initialization and API-related logic.
@@ -121,6 +121,6 @@ The project is organized into the following directories:
 ## Features 🌟
 
 - **Authentication**: Firebase-based authentication with support for guest sessions.
-- **Queue Management**: Add, remove, and manage items in a FIFO manner using `QueueManager`.
+- **Queue Management**: Add, remove, and manage items in a FIFO manner using `QueueManager` through custom hooks.
 - **Theme Management**: Light, dark, and system themes.
 - **Validation**: Client-side validation for forms using regular expressions.
