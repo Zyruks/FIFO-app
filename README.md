@@ -1,50 +1,113 @@
-# React + TypeScript + Vite
+<!--
+* Contributors: @Zyruks
+* Last updated on: December 3, 2024
+* Last updated by: @Zyruks
+-->
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# FIFO App Overview 🗂️
 
-Currently, two official plugins are available:
+Welcome to the **FIFO App**! This repository contains a simple application to manage a queue (First In, First Out) with support for user authentication, guest sessions, and theme management. Below is an overview of the project along with instructions on how to get started.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents 📑
 
-## Expanding the ESLint configuration
+- [Prerequisites 🛠️](#prerequisites-🛠️)
+- [Installation 🚀](#installation-🚀)
+- [Environment Variables 🔑](#environment-variables-🔑)
+- [General Setup ⚙️](#general-setup-⚙️)
+- [Project Structure 📂](#project-structure-📂)
+- [Utilities 🔧](#utilities-🔧)
+- [Features 🌟](#features-🌟)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## Prerequisites 🛠️
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Before using this project, ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (version 20.13.1)
+- [pnpm](https://pnpm.io/) (version 9.9.0)
+
+## Installation 🚀
+
+To set up the project, clone the repository and install the dependencies:
+
+```sh
+git clone https://github.com/Zyruks/FIFO-app.git
+cd fifo-app
+pnpm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Environment Variables 🔑
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+To run the project, you'll need to configure environment variables. Here's a sample of what needs to be configured:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```sh
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_firebase_app_id
 ```
+
+**Note:** Ensure these variables are kept secure and not exposed publicly.
+
+## General Setup ⚙️
+
+From the root of the project, you can run the following commands:
+
+### Development
+
+- **Run Development**:
+
+  ```sh
+  pnpm dev
+  ```
+
+### Build
+
+- **Build Application**:
+
+  ```sh
+  pnpm build
+  ```
+
+### Preview
+
+- **Preview Application**:
+
+  ```sh
+  pnpm preview
+  ```
+
+### Ports
+
+- **Application**: [http://localhost:5173](http://localhost:5173)
+
+## Project Structure 📂
+
+The project is organized into the following directories:
+
+- **`src/common`**: Contains shared logic and utilities:
+  - **`context`**: Context providers for state management (`AuthContext`, `QueueContext`, `ThemeContext`).
+  - **`hooks`**: Custom React hooks for event handling, local storage, and more.
+  - **`constants`**: Centralized constants such as themes, form states, and Firebase error codes.
+  - **`utils`**: Utility functions (`cn`, `validatePattern`).
+- **`src/api`**: Contains Firebase initialization and API-related logic.
+- **`src/components`**: Contains reusable UI components, such as `Button`, `TextInput`, and `LoginForm`.
+- **`src/layouts`**: Layout components like `BaseLayout` for consistent structure.
+- **`src/styles`**: SCSS files for styling (`main.scss`, `base/general.scss`).
+
+## Utilities 🔧
+
+- **TypeScript**: Provides static type checking.
+- **ESLint**: Maintains code quality.
+- **Prettier**: Ensures consistent code formatting.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+
+## Features 🌟
+
+- **Authentication**: Firebase-based authentication with support for guest sessions.
+- **Queue Management**: Add, remove, and manage items in a FIFO manner.
+- **Theme Management**: Light, dark, and system themes.
+- **Validation**: Client-side validation for forms using regular expressions.
