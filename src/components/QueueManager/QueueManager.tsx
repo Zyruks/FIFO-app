@@ -29,7 +29,6 @@ export const QueueManager = ({ className }: QueueProps) => {
 
   const [itemName, setItemName] = useState('');
   const [itemFieldState, setItemFieldState] = useState<FormFieldState>(FormFieldState.default);
-
   const [lastAttended, setLastAttended] = useState<string | null>(null);
   const [lastRemoved, setLastRemoved] = useState<string | null>(null);
   const [notification, setNotification] = useState<string | null>(null);

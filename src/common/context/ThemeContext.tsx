@@ -1,6 +1,5 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
-import { Theme } from '../constants';
-import { useLocalStorage } from '@common';
+import { Theme, useLocalStorage } from '@common';
 
 type ThemeContextType = {
   /**

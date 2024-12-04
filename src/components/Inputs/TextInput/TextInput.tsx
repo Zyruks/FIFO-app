@@ -9,10 +9,6 @@ interface TextInputProps extends Input, Omit<InputHTMLAttributes<HTMLInputElemen
   inputContainerClassName?: string;
 }
 
-/**
- * A Text Input enable the user to interact with and input
- * short content and data.
- */
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
   (
     {

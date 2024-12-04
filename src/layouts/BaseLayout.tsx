@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { Header } from '../components/Header/Header';
 import { cn } from '@common';
+import { Header } from '@components';
 
 interface BaseLayoutProps {
   /**
