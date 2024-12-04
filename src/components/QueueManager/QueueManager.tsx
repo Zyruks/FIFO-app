@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { cn, FormFieldState, RegexPatterns, useQueueContext, validatePattern } from '@common';
+import { cn, FormFieldState, RegexPatterns, useQueue, validatePattern } from '@common';
 import {
   Button,
   ButtonSize,
@@ -25,7 +25,7 @@ interface QueueProps {
 }
 
 export const QueueManager = ({ className }: QueueProps) => {
-  const { queue, setQueue, isLoading } = useQueueContext();
+  const { queue, setQueue, isLoading } = useQueue();
 
   const [itemName, setItemName] = useState('');
   const [itemFieldState, setItemFieldState] = useState<FormFieldState>(FormFieldState.default);
