@@ -15,10 +15,11 @@ interface LoginFormProps {
 export const LoginForm = ({ className }: LoginFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+
   const { loginAsGuest } = useAuth();
+
   const [emailFieldState, setEmailFieldState] = useState<FormFieldState>(FormFieldState.default);
   const [passwordFieldState, setPasswordFieldState] = useState<FormFieldState>(FormFieldState.default);
 
@@ -84,10 +85,18 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 
     if (id === 'email') {
       setEmail(value);
-      setEmailFieldState(FormFieldState.default);
+      if (validatePattern(value, RegexPatterns.email)) {
+        setEmailFieldState(FormFieldState.success);
+      } else {
+        setEmailFieldState(FormFieldState.error);
+      }
     } else if (id === 'password') {
       setPassword(value);
-      setPasswordFieldState(FormFieldState.default);
+      if (validatePattern(value, RegexPatterns.password)) {
+        setPasswordFieldState(FormFieldState.success);
+      } else {
+        setPasswordFieldState(FormFieldState.error);
+      }
     }
   };
 
