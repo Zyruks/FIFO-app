@@ -77,11 +77,11 @@ const Queue = ({ className }: QueueProps) => {
 
   const renderQueueItems = () =>
     queue.length === 0 ? (
-      <p className="text-gray-500">No items in the queue.</p>
+      <p className="max-h-64 min-h-64 text-gray-500">No items in the queue.</p>
     ) : (
-      <ul className="max-h-64 min-h-64 list-inside list-disc space-y-4 overflow-scroll py-4 pr-4">
+      <ul className="max-h-64 min-h-64 space-y-4 overflow-scroll py-4 pr-4">
         {queue.map((item) => (
-          <li key={item.id} className="flex items-center justify-between">
+          <li key={item.id} className="flex animate-fade-up items-center justify-between">
             <span className="font-semibold">{item.name}</span>
             <Button size={ButtonSize.sm} onClick={() => handleRemoveItem(item.id)} variant={ButtonVariant.destructive}>
               Remove
