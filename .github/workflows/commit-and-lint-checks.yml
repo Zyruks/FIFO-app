@@ -1,0 +1,54 @@
+name: COMMITLINT AND VALIDATION
+
+on: [push, pull_request]
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js (v20.8.1)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.8.1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+
+      - name: Cache pnpm Store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
+
+      - name: Print versions
+        run: |
+          git --version
+          node --version
+          echo "pnpm $(pnpm --version)"
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      # Create commitlint config if not present (temporary solution)
+      - name: Create commitlint config
+        run: |
+          echo "export default {extends: ['@commitlint/config-conventional'],rules: {'body-max-length': [2, 'always', Infinity],'body-max-line-length': [2, 'always', Infinity],'body-leading-blank': [2, 'always'],'body-min-length': [2, 'always', 0],'footer-leading-blank': [2, 'always'],'footer-max-length': [2, 'always', Infinity],'footer-max-line-length': [2, 'always', Infinity],'footer-min-length': [2, 'always', 0],'header-min-length': [2, 'always', 14],'header-max-length': [2, 'always', 72],'scope-case': [2, 'always', 'lower-case'],'subject-case': [2, 'always', ['lower-case', 'sentence-case', 'start-case', 'pascal-case', 'upper-case']],'subject-full-stop': [2, 'never', '.'],'subject-min-length': [2, 'always', 0],},};" > commitlint.config.mjs
+
+      # Validate branch naming convention
+      - name: Validate Branch Name (Push)
+        if: github.event_name != 'pull_request'
+        run: pnpx validate-branch-name
+
+      - name: Validate PR commits with commitlint
+        if: github.event_name == 'pull_request'
+        run: pnpx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+      # Lint staged files with lint-staged
+      - name: Run lint-staged
+        run: pnpx lint-staged
