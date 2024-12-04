@@ -121,6 +121,6 @@ The project is organized into the following directories:
 ## Features 🌟
 
 - **Authentication**: Firebase-based authentication with support for guest sessions.
-- **Queue Management**: Add, remove, and manage items in a FIFO manner.
+- **Queue Management**: Add, remove, and manage items in a FIFO manner using `QueueManager`.
 - **Theme Management**: Light, dark, and system themes.
 - **Validation**: Client-side validation for forms using regular expressions.

@@ -1,6 +1,5 @@
-import Queue from '../components/Queue/Queue';
 import { cn, useAuth } from '@common';
-import { LoginForm } from '@components';
+import { LoginForm, QueueManager } from '@components';
 import { BaseLayout } from '@layouts';
 
 const App = () => {
@@ -23,7 +22,7 @@ const App = () => {
   return (
     <BaseLayout>
       <main className={classes}>
-        <div className="container max-md:px-4">{currentUser || isGuest ? <Queue /> : <LoginForm />}</div>
+        <div className="container max-md:px-4">{currentUser || isGuest ? <QueueManager /> : <LoginForm />}</div>
       </main>
     </BaseLayout>
   );
