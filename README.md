@@ -10,7 +10,7 @@ Welcome to the **FIFO App**! This repository contains a simple application to ma
 
 ## Table of Contents 📑
 
-- [Prerequisites 🛠️](#prerequisites-🛠️)
+- [Prerequisites 🛠️](#prerequisites)
 - [Installation 🚀](#installation-🚀)
 - [Environment Variables 🔑](#environment-variables-🔑)
 - [General Setup ⚙️](#general-setup-⚙️)
