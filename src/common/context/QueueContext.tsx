@@ -18,21 +18,31 @@ interface QueueContextType {
   /**
    * Sets the current queue of items.
    */
-  setQueue: Dispatch<SetStateAction<QueueItem[]>>;
+  setQueue: Dispatch<SetStateAction<Array<QueueItem>>>;
+
+  /**
+   * Indicates whether the queue data is still loading.
+   */
+  isLoading: boolean;
 }
 
 const QueueContext = createContext<QueueContextType>({} as QueueContextType);
 
 export const QueueProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser } = useAuth();
-  const [queue, setQueue] = useState<QueueItem[]>([]);
-  const [queueLocal, setQueueLocal] = useLocalStorage<QueueItem[]>('queue_guest', []);
+  const [queue, setQueue] = useState<Array<QueueItem>>([]);
+  const [queueLocal, setQueueLocal] = useLocalStorage<Array<QueueItem>>('queue_guest', []);
   const [hasFetchedData, setHasFetchedData] = useState(false);
+  const [isFetchingData, setIsFetchingData] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
+    setHasFetchedData(false);
+    setIsLoading(true);
 
     if (currentUser) {
+      setIsFetchingData(true);
       const queueDocRef = doc(db, 'queues', currentUser.uid);
 
       const fetchData = async () => {
@@ -41,11 +51,11 @@ export const QueueProvider = ({ children }: { children: ReactNode }) => {
           if (docSnapshot.exists()) {
             const data = docSnapshot.data();
             if (data && data.items) {
-              let itemsArray: QueueItem[] = [];
+              let itemsArray: Array<QueueItem> = [];
 
               if (Array.isArray(data.items)) {
                 itemsArray = data.items;
-              } else {
+              } else if (typeof data.items === 'object') {
                 itemsArray = Object.values(data.items);
               }
 
@@ -59,12 +69,14 @@ export const QueueProvider = ({ children }: { children: ReactNode }) => {
           }
 
           setHasFetchedData(true);
+          setIsFetchingData(false);
+          setIsLoading(false);
 
           unsubscribe = onSnapshot(queueDocRef, (docSnapshot) => {
             if (docSnapshot.exists()) {
               const data = docSnapshot.data();
               if (data && data.items) {
-                let itemsArray: QueueItem[] = [];
+                let itemsArray: Array<QueueItem> = [];
 
                 if (Array.isArray(data.items)) {
                   itemsArray = data.items;
@@ -83,13 +95,17 @@ export const QueueProvider = ({ children }: { children: ReactNode }) => {
         } catch (error) {
           console.error('Error fetching Firestore document:', error);
           setHasFetchedData(true);
+          setIsFetchingData(false);
+          setIsLoading(false);
         }
       };
 
       fetchData();
-    } else {
+    } else if (currentUser === null) {
+      // User is not logged in
       setQueue(queueLocal);
       setHasFetchedData(true);
+      setIsLoading(false);
     }
 
     return () => {
@@ -98,7 +114,7 @@ export const QueueProvider = ({ children }: { children: ReactNode }) => {
   }, [currentUser]);
 
   useEffect(() => {
-    if (currentUser && hasFetchedData) {
+    if (currentUser && hasFetchedData && !isFetchingData) {
       const queueDocRef = doc(db, 'queues', currentUser.uid);
 
       const timeoutId = setTimeout(() => {
@@ -109,15 +125,15 @@ export const QueueProvider = ({ children }: { children: ReactNode }) => {
 
       return () => clearTimeout(timeoutId);
     }
-  }, [queue, currentUser, hasFetchedData]);
+  }, [queue, currentUser, hasFetchedData, isFetchingData]);
 
   useEffect(() => {
-    if (!currentUser && hasFetchedData) {
+    if (currentUser === null && hasFetchedData) {
       setQueueLocal(queue);
     }
   }, [queue, currentUser, hasFetchedData]);
 
-  return <QueueContext.Provider value={{ queue, setQueue }}>{children}</QueueContext.Provider>;
+  return <QueueContext.Provider value={{ queue, setQueue, isLoading }}>{children}</QueueContext.Provider>;
 };
 
 export const useQueueContext = () => {
