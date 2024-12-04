@@ -20,7 +20,17 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Global paths */
+    "paths": {
+      "@api": ["./src/api"],
+      "@common": ["./src/common"],
+      "@components": ["./src/components"],
+      "@layouts": ["./src/layouts"],
+      "@pages": ["./src/pages"],
+      "@styles/*": ["./src/styles/*"]
+    }
   },
   "include": ["src"]
 }
