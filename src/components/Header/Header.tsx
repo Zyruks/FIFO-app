@@ -10,12 +10,6 @@ interface HeaderProps {
 
 export const Header = ({ className }: HeaderProps) => {
   const { theme, setTheme } = useTheme();
-
-  const handleToggle = () => {
-    const nextTheme = theme === Theme.light ? Theme.dark : Theme.light;
-    setTheme(nextTheme);
-  };
-
   const { logout, currentUser, isGuest } = useAuth();
 
   const classes = {
@@ -28,6 +22,11 @@ export const Header = ({ className }: HeaderProps) => {
       className,
     ),
     container: cn('flex items-center justify-between', 'container mx-auto px-4'),
+  };
+
+  const handleToggle = () => {
+    const nextTheme = theme === Theme.light ? Theme.dark : Theme.light;
+    setTheme(nextTheme);
   };
 
   const handleLogout = () => {
