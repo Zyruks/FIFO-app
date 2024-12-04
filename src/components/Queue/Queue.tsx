@@ -15,7 +15,7 @@ interface QueueProps {
 }
 
 const Queue = ({ className }: QueueProps) => {
-  const { queue, setQueue } = useQueueContext();
+  const { queue, setQueue, isLoading } = useQueueContext();
 
   const [itemName, setItemName] = useState('');
   const [itemFieldState, setItemFieldState] = useState<FormFieldState>(FormFieldState.default);
@@ -79,7 +79,7 @@ const Queue = ({ className }: QueueProps) => {
     queue.length === 0 ? (
       <p className="max-h-64 min-h-64 text-gray-500">No items in the queue.</p>
     ) : (
-      <ul className="max-h-64 min-h-64 space-y-4 overflow-scroll py-4 pr-4">
+      <ul className="max-h-64 min-h-64 space-y-4 overflow-auto py-4 pr-4">
         {queue.map((item) => (
           <li key={item.id} className="flex animate-fade-up items-center justify-between">
             <span className="font-semibold">{item.name}</span>
@@ -90,6 +90,19 @@ const Queue = ({ className }: QueueProps) => {
         ))}
       </ul>
     );
+
+  if (isLoading) {
+    return (
+      <section className={classes.container}>
+        <header>
+          <h1 className="text-center text-2xl font-bold">FIFO Management</h1>
+        </header>
+        <div className="py-20 text-center">
+          <p className="text-lg">Loading...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={classes.container}>
