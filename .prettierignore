@@ -1,0 +1,27 @@
+# Initially ignore everything in the project
+/*
+
+# Source code and content directories
+!/.github
+!/.vscode
+!/src
+!/packages
+
+# Configuration files
+!.astro.config.ts
+!.eslintrc.config.mjs
+!commitlint.config.mjs
+!lint-staged.config.mjs
+!package.json
+!postcss.config.mjs
+!prettier.config.mjs
+!release.config.mjs
+!tsconfig.json
+!turbo.json
+!validate-branch-name.config.js
+!pnpm-workspace.yaml
+!tailwind.config.ts
+!tsconfig.*.json
+
+# Documentation
+!README.md
