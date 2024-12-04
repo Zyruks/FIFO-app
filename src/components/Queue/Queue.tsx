@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { cn, FormFieldState, RegexPatterns, useQueueContext, validatePattern } from '@common';
-import { Button, ButtonSize, ButtonVariant, TextInput } from '@components';
+import { Button, ButtonSize, ButtonVariant, Icon, IconCatalog, IconStyle, TextInput } from '@components';
 
 type QueueItem = {
   id: string;
@@ -23,11 +23,11 @@ const Queue = ({ className }: QueueProps) => {
   const classes = {
     container: cn(
       'container mx-auto w-full space-y-6 rounded-lg p-12 shadow-md',
-      'bg-neutral-50 shadow-lg dark:bg-neutral-900',
+      'bg-neutral-50 shadow-lg dark:bg-neutral-950',
       'border border-neutral-300 dark:border-neutral-700',
       'text-neutral-950 dark:text-neutral-50',
-      'dark:shadow-neutral-800/50',
-      'animate-fade-up animate-duration-100',
+      'dark:shadow-neutral-800/40',
+      'animate-fade-up animate-duration-300',
       className,
     ),
   };
@@ -84,7 +84,7 @@ const Queue = ({ className }: QueueProps) => {
           <li key={item.id} className="flex animate-fade-up items-center justify-between">
             <span className="font-semibold">{item.name}</span>
             <Button size={ButtonSize.sm} onClick={() => handleRemoveItem(item.id)} variant={ButtonVariant.destructive}>
-              Remove
+              <Icon icon={IconCatalog.trashCan} className="size-4" iconStyle={IconStyle.bold} />
             </Button>
           </li>
         ))}

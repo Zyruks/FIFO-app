@@ -36,7 +36,7 @@ const InvertVariants: Record<ButtonVariant, string> = {
   [ButtonVariant.secondary]:
     'bg-lime-50 text-lime-600 hover:bg-lime-200 border-lime-900  dark:bg-transparent dark:hover:bg-lime-400 dark:text-lime-100 border-lime-500 dark:hover:text-lime-900',
   [ButtonVariant.neutral]:
-    'bg-neutral-50 text-neutral-600 hover:bg-neutral-200 border-neutral-900  dark:bg-transparent dark:hover:bg-neutral-400 dark:text-neutral-100 border-neutral-500 dark:hover:text-neutral-900',
+    'bg-neutral-50 text-neutral-600 hover:bg-neutral-200 border-neutral-900  dark:bg-transparent dark:hover:bg-neutral-900 dark:text-neutral-100 dark:border-neutral-700/80 ',
   [ButtonVariant.destructive]:
     'bg-rose-50 text-rose-600 hover:bg-rose-200 border-rose-900  dark:bg-transparent dark:hover:bg-rose-400 dark:text-rose-100 border-rose-500 dark:hover:text-rose-900',
 };

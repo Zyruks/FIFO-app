@@ -48,7 +48,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         'border',
         'h-10',
         'text-neutral-950 dark:text-neutral-50',
-        'bg-neutral-50 dark:bg-neutral-900',
+        'bg-neutral-50 dark:bg-neutral-950',
         'transition-colors duration-300',
         {
           'bg-neutral-300 text-neutral-700 opacity-80': isLoading,

@@ -1,5 +1,5 @@
 import { cn, Theme, useAuth, useTheme } from '@common';
-import { Button, ButtonSize, ButtonVariant } from '@components';
+import { Button, ButtonSize, ButtonVariant, Icon, IconCatalog, IconStyle } from '@components';
 
 interface HeaderProps {
   /**
@@ -38,20 +38,18 @@ export const Header = ({ className }: HeaderProps) => {
     <header className={classes.header}>
       <div className={classes.container}>
         <h1 className="text-lg font-bold">FIFO App</h1>
-        {/* TODO: Add Icons */}
 
-        <div className="flex items-center gap-4">
-          <Button
-            onClick={handleToggle}
-            size={ButtonSize.sm}
-            className="rounded bg-blue-500 px-3 py-2 text-white shadow hover:bg-blue-600 dark:bg-yellow-500 dark:hover:bg-yellow-600"
-          >
-            {theme === Theme.dark ? 'Light Mode' : 'Dark Mode'}
-          </Button>
+        <div className="flex animate-fade items-center gap-4">
+          <button onClick={handleToggle}>
+            <Icon icon={theme === Theme.dark ? IconCatalog.sun : IconCatalog.moon} className="size-5" />
+          </button>
 
           {(currentUser || isGuest) && (
             <Button isInverted variant={ButtonVariant.neutral} size={ButtonSize.sm} onClick={handleLogout}>
-              Logout
+              <div className="flex items-center gap-2">
+                <span>Logout</span>
+                <Icon icon={IconCatalog.logout} className="size-4" iconStyle={IconStyle.bold} />
+              </div>
             </Button>
           )}
         </div>

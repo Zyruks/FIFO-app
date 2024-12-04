@@ -6,7 +6,10 @@ import { BaseLayout } from '@layouts';
 const App = () => {
   const { currentUser, isLoading, isGuest } = useAuth();
 
-  const classes = cn('flex items-center justify-center', 'bg-neutral-100 dark:bg-neutral-950');
+  const classes = cn(
+    'flex items-center justify-center',
+    'bg-neutral-100 transition-colors duration-300 ease-in-out dark:bg-neutral-950',
+  );
 
   if (isLoading) {
     return (
