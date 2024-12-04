@@ -37,7 +37,7 @@ jobs:
       - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@v2.2.1
         with:
-          args: deploy --only hosting --config ./firebase/firebase.json
+          args: deploy --only hosting
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           PROJECT_ID: log-in-form-8e226
