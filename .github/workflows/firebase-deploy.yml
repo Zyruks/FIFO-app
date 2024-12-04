@@ -39,5 +39,5 @@ jobs:
         with:
           args: deploy --only hosting --config .firebase/firebase.json
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           PROJECT_ID: log-in-form-8e226 # Your Firebase project ID
