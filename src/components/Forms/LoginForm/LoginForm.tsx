@@ -24,7 +24,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 
   const classes = {
     container: cn(
-      'bg-neutral-50 dark:bg-neutral-950',
+      'mx-auto bg-neutral-50 dark:bg-neutral-950',
       'border border-neutral-300 dark:border-neutral-700',
       'shadow-lg dark:shadow-neutral-800/30',
       'w-full max-w-lg rounded-lg',

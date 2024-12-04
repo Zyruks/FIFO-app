@@ -36,6 +36,7 @@ const Queue = ({ className }: QueueProps) => {
 
   const classes = {
     container: cn(
+      'mx-auto',
       'w-full space-y-6 rounded-lg p-12 shadow-md',
       'bg-neutral-50 shadow-lg dark:bg-neutral-950',
       'border border-neutral-300 dark:border-neutral-700',
