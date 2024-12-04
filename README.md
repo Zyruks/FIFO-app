@@ -42,12 +42,25 @@ pnpm install
 To run the project, you'll need to configure environment variables. Here's a sample of what needs to be configured:
 
 ```sh
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
-VITE_FIREBASE_APP_ID=your_firebase_app_id
+# Environment Variables Configuration Template
+# Rename this file to `.env.local` or `.env` and populate it with your secrets.
+
+# -------------------
+# API Configuration
+# -------------------
+# Base URL for the API.
+VITE_API_URL=
+
+# -------------------
+# Firebase Configuration
+# -------------------
+# Firebase project settings.
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
 ```
 
 **Note:** Ensure these variables are kept secure and not exposed publicly.
