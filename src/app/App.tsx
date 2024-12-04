@@ -7,8 +7,9 @@ const App = () => {
   const { currentUser, isLoading, isGuest } = useAuth();
 
   const classes = cn(
-    'flex items-center justify-center',
-    'bg-neutral-100 transition-colors duration-300 ease-in-out dark:bg-neutral-950',
+    'flex h-full w-full items-center justify-center',
+    'bg-neutral-100 dark:bg-neutral-950',
+    'transition-colors duration-300 ease-in-out',
   );
 
   if (isLoading) {
@@ -21,7 +22,9 @@ const App = () => {
 
   return (
     <BaseLayout>
-      <div className={classes}>{currentUser || isGuest ? <Queue /> : <LoginForm />}</div>
+      <main className={classes}>
+        <div className="container max-md:px-4">{currentUser || isGuest ? <Queue /> : <LoginForm />}</div>
+      </main>
     </BaseLayout>
   );
 };

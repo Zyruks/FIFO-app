@@ -22,7 +22,7 @@ const Queue = ({ className }: QueueProps) => {
 
   const classes = {
     container: cn(
-      'container mx-auto w-full space-y-6 rounded-lg p-12 shadow-md',
+      'w-full space-y-6 rounded-lg p-12 shadow-md',
       'bg-neutral-50 shadow-lg dark:bg-neutral-950',
       'border border-neutral-300 dark:border-neutral-700',
       'text-neutral-950 dark:text-neutral-50',
@@ -92,7 +92,7 @@ const Queue = ({ className }: QueueProps) => {
     );
 
   return (
-    <main className={classes.container}>
+    <section className={classes.container}>
       <header>
         <h1 className="text-center text-2xl font-bold">FIFO Management</h1>
       </header>
@@ -142,7 +142,7 @@ const Queue = ({ className }: QueueProps) => {
           </div>
         </section>
       </div>
-    </main>
+    </section>
   );
 };
 
