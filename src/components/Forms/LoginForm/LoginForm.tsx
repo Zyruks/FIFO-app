@@ -128,11 +128,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
   };
 
   const isSubmitDisabled =
-    !email ||
-    !password ||
-    emailFieldState === FormFieldState.error ||
-    passwordFieldState === FormFieldState.error ||
-    isLoading;
+    emailFieldState !== FormFieldState.success || passwordFieldState !== FormFieldState.success || isLoading;
 
   return (
     <form onSubmit={handleSubmit} className={classes.container}>
