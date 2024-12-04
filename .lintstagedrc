@@ -1,0 +1,7 @@
+{
+  "src/**/*.{js,ts,jsx,tsx}": [
+    "prettier --write --ignore-unknown",
+    "eslint --fix --config ./eslint.config.js"
+  ],
+  "package.json": ["manypkg fix"]
+}
