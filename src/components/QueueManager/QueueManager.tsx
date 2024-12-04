@@ -24,7 +24,7 @@ interface QueueProps {
   className?: string;
 }
 
-const Queue = ({ className }: QueueProps) => {
+export const QueueManager = ({ className }: QueueProps) => {
   const { queue, setQueue, isLoading } = useQueueContext();
 
   const [itemName, setItemName] = useState('');
@@ -121,7 +121,13 @@ const Queue = ({ className }: QueueProps) => {
         <Notification variant={NotificationVariant.success} message={`Last Attended: ${lastAttended}`} />
       )}
       {lastRemoved && <Notification variant={NotificationVariant.warning} message={`Last Removed: ${lastRemoved}`} />}
-      {notification && <Notification variant={NotificationVariant.error} message={notification} />}
+      {notification && (
+        <Notification
+          className="animate-shake animate-duration-200"
+          variant={NotificationVariant.error}
+          message={notification}
+        />
+      )}
     </div>
   );
 
@@ -192,5 +198,3 @@ const Queue = ({ className }: QueueProps) => {
     </section>
   );
 };
-
-export default Queue;
