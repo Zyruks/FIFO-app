@@ -13,7 +13,7 @@ const App = () => {
 
   if (isLoading) {
     return (
-      <div className={classes}>
+      <div className="grid h-dvh w-dvw place-items-center bg-neutral-100 dark:bg-neutral-950 dark:text-white">
         <p>Loading...</p>
       </div>
     );
