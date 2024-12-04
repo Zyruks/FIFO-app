@@ -1,6 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn, FormFieldState, RegexPatterns, useQueueContext, validatePattern } from '@common';
-import { Button, ButtonSize, ButtonVariant, Icon, IconCatalog, IconStyle, TextInput } from '@components';
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Icon,
+  IconCatalog,
+  IconStyle,
+  Notification,
+  NotificationVariant,
+  TextInput,
+} from '@components';
 
 type QueueItem = {
   id: string;
@@ -20,6 +30,10 @@ const Queue = ({ className }: QueueProps) => {
   const [itemName, setItemName] = useState('');
   const [itemFieldState, setItemFieldState] = useState<FormFieldState>(FormFieldState.default);
 
+  const [lastAttended, setLastAttended] = useState<string | null>(null);
+  const [lastRemoved, setLastRemoved] = useState<string | null>(null);
+  const [notification, setNotification] = useState<string | null>(null);
+
   const classes = {
     container: cn(
       'w-full space-y-6 rounded-lg p-12 shadow-md',
@@ -32,6 +46,13 @@ const Queue = ({ className }: QueueProps) => {
     ),
   };
 
+  useEffect(() => {
+    if (notification) {
+      const timeout = setTimeout(() => setNotification(null), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [notification]);
+
   const handleAddItem = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -41,7 +62,7 @@ const Queue = ({ className }: QueueProps) => {
     }
 
     if (queue.some((item) => item.name.toLowerCase() === itemName.trim().toLowerCase())) {
-      alert('Item already exists.');
+      setNotification(`"${itemName.trim()}" is a duplicate and cannot be added.`);
       return;
     }
 
@@ -59,11 +80,13 @@ const Queue = ({ className }: QueueProps) => {
     if (queue.length === 0) return;
 
     const [attendedItem, ...rest] = queue;
-    alert(`Attended to: ${attendedItem.name}`);
+    setLastAttended(attendedItem.name);
     setQueue(rest);
   };
 
   const handleRemoveItem = (id: string) => {
+    const removedItem = queue.find((item) => item.id === id);
+    if (removedItem) setLastRemoved(removedItem.name);
     setQueue(queue.filter((item) => item.id !== id));
   };
 
@@ -91,6 +114,16 @@ const Queue = ({ className }: QueueProps) => {
       </ul>
     );
 
+  const renderNotifications = () => (
+    <div className="space-y-4">
+      {lastAttended && (
+        <Notification variant={NotificationVariant.success} message={`Last Attended: ${lastAttended}`} />
+      )}
+      {lastRemoved && <Notification variant={NotificationVariant.warning} message={`Last Removed: ${lastRemoved}`} />}
+      {notification && <Notification variant={NotificationVariant.error} message={notification} />}
+    </div>
+  );
+
   if (isLoading) {
     return (
       <section className={classes.container}>
@@ -111,7 +144,7 @@ const Queue = ({ className }: QueueProps) => {
       </header>
 
       <div className="grid gap-10 md:grid-cols-2">
-        {/*  Queue Add Items  */}
+        {/* Add Items Form */}
         <form onSubmit={handleAddItem} className="space-y-4">
           <TextInput
             label="Add to Queue"
@@ -127,14 +160,15 @@ const Queue = ({ className }: QueueProps) => {
             assistiveText={itemFieldState === FormFieldState.error ? 'Item name cannot be empty.' : ''}
             fieldState={itemFieldState}
           />
-
           <Button isFullWidth type="submit" variant={ButtonVariant.primary} isDisabled={!itemName.trim()}>
             Add Item
           </Button>
+
+          {renderNotifications()}
         </form>
 
+        {/* Queue Section */}
         <section className="grid gap-4">
-          {/* Queue List */}
           <div className="space-y-0.5">
             <h2 className="border-b border-neutral-300 pb-2 text-xl font-semibold dark:border-neutral-700">
               Current Queue
@@ -142,7 +176,6 @@ const Queue = ({ className }: QueueProps) => {
             {renderQueueItems()}
           </div>
 
-          {/* Actions */}
           <div className="flex items-center gap-4">
             <Button
               type="button"
