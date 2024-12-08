@@ -1,5 +1,4 @@
-import { FirebaseQueueProvider } from './providers/FirebaseQueueProvider';
-import { LocalStorageQueueProvider } from './providers/LocalStorageQueueProvider';
+import { FirebaseQueueProvider, LocalStorageQueueProvider } from './providers';
 import { GUEST_QUEUE_KEY, QueueProvider, QueueProviderType } from '@common';
 
 export class QueueProviderFactory {

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { QueueItem, QueueProvider } from '../../types/queue';
 import { QueueProviderFactory } from './QueueProviderFactory';
-import { QueueProviderType, useAuth } from '@common';
+import { QueueItem, QueueProvider, QueueProviderType, useAuth } from '@common';
 
 /**
  * Custom hook for managing queue operations with support
