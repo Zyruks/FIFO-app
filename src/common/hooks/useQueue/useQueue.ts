@@ -1,137 +1,98 @@
 import { useEffect, useState } from 'react';
-import { db } from '@api';
-import { useAuth, useLocalStorage } from '@common';
-import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { QueueProviderFactory } from './QueueProviderFactory';
+import { QueueItem, QueueProvider, QueueProviderType, useAuth } from '@common';
 
-interface QueueItem {
-  /**
-   * The unique identifier of the queue item.
-   */
-  id: string;
-
-  /**
-   * The name of the queue item.
-   */
-  name: string;
-}
-
+/**
+ * Custom hook for managing queue operations with support
+ * for both authenticated and guest users.
+ *
+ * @returns Object containing queue state and management
+ *   functions.
+ */
 export const useQueue = () => {
   const { currentUser } = useAuth();
   const [queue, setQueue] = useState<Array<QueueItem>>([]);
-  const [queueLocal, setQueueLocal] = useLocalStorage<Array<QueueItem>>('queue_guest', []);
-  const [hasFetchedData, setHasFetchedData] = useState(false);
-  const [isFetchingData, setIsFetchingData] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [provider, setProvider] = useState<QueueProvider | null>(null);
 
   useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
-    setHasFetchedData(false);
-    setIsLoading(true);
+    const initializeNewProvider = async () => {
+      const newProvider = currentUser
+        ? QueueProviderFactory.createProvider(QueueProviderType.FIREBASE, { userId: currentUser.uid })
+        : QueueProviderFactory.createProvider(QueueProviderType.LOCAL_STORAGE);
 
-    if (currentUser) {
-      // User is authenticated, fetch their queue from Firestore
-      setIsFetchingData(true);
-      const queueDocRef = doc(db, 'queues', currentUser.uid);
+      const existingQueue = await newProvider.getQueue();
 
-      const fetchData = async () => {
-        try {
-          // Retrieve the queue document from Firestore
-          const docSnapshot = await getDoc(queueDocRef);
-          if (docSnapshot.exists()) {
-            const data = docSnapshot.data();
-            if (data && data.items) {
-              let itemsArray: Array<QueueItem> = [];
+      // If new provider has data, use it
+      // If new provider is empty but we have data in state, migrate it
+      if (existingQueue.length > 0) setQueue(existingQueue);
+      else if (queue.length > 0) await newProvider.setQueue(queue);
 
-              // Check if 'items' is an array or an object and convert accordingly
-              if (Array.isArray(data.items)) {
-                itemsArray = data.items;
-              } else if (typeof data.items === 'object') {
-                itemsArray = Object.values(data.items);
-              }
-
-              setQueue(itemsArray);
-            } else {
-              // If 'items' field is missing, initialize with an empty array
-              setQueue([]);
-            }
-          } else {
-            // If the document does not exist, create it with an empty 'items' array
-            await setDoc(queueDocRef, { items: [] });
-            setQueue([]);
-          }
-
-          // Update state to reflect that data has been fetched
-          setHasFetchedData(true);
-          setIsFetchingData(false);
-          setIsLoading(false);
-
-          // Set up a real-time listener for changes in the queue document
-          unsubscribe = onSnapshot(queueDocRef, (docSnapshot) => {
-            if (docSnapshot.exists()) {
-              const data = docSnapshot.data();
-              if (data && data.items) {
-                let itemsArray: Array<QueueItem> = [];
-
-                if (Array.isArray(data.items)) {
-                  itemsArray = data.items;
-                } else if (typeof data.items === 'object') {
-                  itemsArray = Object.values(data.items);
-                }
-
-                setQueue(itemsArray);
-              } else {
-                setQueue([]);
-              }
-            } else {
-              setQueue([]);
-            }
-          });
-        } catch (error) {
-          // Handle any errors that occur during data fetching
-          console.error('Error fetching Firestore document:', error);
-          setHasFetchedData(true);
-          setIsFetchingData(false);
-          setIsLoading(false);
-        }
-      };
-
-      fetchData();
-    } else if (currentUser === null) {
-      // User is not authenticated, use the local queue from localStorage
-      setQueue(queueLocal);
-      setHasFetchedData(true);
-      setIsLoading(false);
-    }
-
-    // Cleanup function to unsubscribe from Firestore listener when component unmounts or currentUser changes
-    return () => {
-      if (unsubscribe) unsubscribe();
+      setProvider(newProvider);
     };
+
+    initializeNewProvider();
   }, [currentUser]);
 
   useEffect(() => {
-    if (currentUser && hasFetchedData && !isFetchingData) {
-      const queueDocRef = doc(db, 'queues', currentUser.uid);
+    let unsubscribe: () => void;
 
-      // Debounce the update to Firestore by 500ms to prevent excessive writes
-      const timeoutId = setTimeout(() => {
-        setDoc(queueDocRef, { items: queue }).catch((error) => {
-          // Handle any errors that occur during the update
-          console.error('Error updating queue data:', error);
+    const initializeQueue = async () => {
+      if (!provider) return;
+
+      setIsLoading(true);
+      try {
+        const initialQueue = await provider.getQueue();
+        // Only update queue if we have items or current queue is empty
+        if (initialQueue.length > 0 || queue.length === 0) {
+          setQueue(initialQueue);
+        }
+        setIsLoading(false);
+
+        unsubscribe = provider.subscribe((updatedQueue) => {
+          // Only update if we have items or current queue is empty
+          if (updatedQueue.length > 0 || queue.length === 0) {
+            setQueue(updatedQueue);
+          }
         });
-      }, 500);
+      } catch (error) {
+        console.error('Error initializing queue:', error);
+        setIsLoading(false);
+      }
+    };
 
-      // Cleanup the timeout if the effect runs again before the timeout completes
-      return () => clearTimeout(timeoutId);
-    }
-  }, [queue, currentUser, hasFetchedData, isFetchingData]);
+    initializeQueue();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [provider]);
 
   useEffect(() => {
-    if (currentUser === null && hasFetchedData) {
-      // If the user logs out, save the current queue to localStorage
-      setQueueLocal(queue);
+    if (provider) {
+      let debounceTimeout: NodeJS.Timeout;
+
+      const updateQueue = async () => {
+        try {
+          await provider.setQueue(queue);
+        } catch (error) {
+          console.error('Error updating queue:', error);
+        }
+      };
+
+      if (currentUser) {
+        // Debounce the update by 500ms if using Firebase
+        debounceTimeout = setTimeout(updateQueue, 500);
+      } else {
+        // Immediate update for LocalStorage
+        updateQueue();
+      }
+
+      return () => {
+        if (debounceTimeout) clearTimeout(debounceTimeout);
+      };
     }
-  }, [queue, currentUser, hasFetchedData]);
+  }, [queue, provider, currentUser]);
 
   return { queue, setQueue, isLoading };
 };
